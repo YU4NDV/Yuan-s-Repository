@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markus Yuan D. Vindua | Akatsuki Shinobi Portfolio</title>
+  <meta name="description" content="Akatsuki & Sharingan themed developer portfolio of Markus Yuan D. Vindua featuring custom Lab Missions, Jutsu Stack, and interactive effects." />
+
+  <!-- Google Fonts: Cinzel (Shinobi Display), Rajdhani (Tech/HUD), Inter (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#07070b',
+            charcoal: '#12121a',
+            crimson: {
+              DEFAULT: '#d90429',
+              bright: '#ff1e42',
+              dark: '#8d0019'
+            }
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            rajdhani: ['Rajdhani', 'sans-serif'],
+            inter: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Animations, Sharingan Effects, & Scrollbar Styling -->
+  <style>
+    :root {
+      --crimson: #d90429;
+      --crimson-bright: #ff1e42;
+      --obsidian: #07070b;
+      --charcoal: #12121a;
+    }
+
+    body {
+      background-color: var(--obsidian);
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Dark Crimson Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07070b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #590011;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d90429;
+    }
+
+    /* Sharingan Rotation Keyframes */
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spinFast {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .sharingan-wheel {
+      transform-origin: center;
+      animation: spinSlow 14s linear infinite;
+      transition: filter 0.35s ease, transform 0.35s ease;
+    }
+
+    .sharingan-container:hover .sharingan-wheel {
+      animation: spinFast 2.4s linear infinite;
+    }
+
+    .sharingan-container:hover .sharingan-glow {
+      filter: drop-shadow(0 0 28px rgba(255, 30, 66, 0.9)) drop-shadow(0 0 55px rgba(217, 4, 41, 0.55));
+    }
+
+    .sharingan-glow {
+      filter: drop-shadow(0 0 16px rgba(217, 4, 41, 0.65));
+      transition: filter 0.4s ease;
+    }
+
+    /* Genjutsu Click Ripple Animation */
+    @keyframes genjutsuRipple {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.95;
+        box-shadow: 0 0 0 0 rgba(255, 30, 66, 0.85), inset 0 0 30px rgba(255, 30, 66, 0.6);
+      }
+      100% {
+        transform: scale(2.6);
+        opacity: 0;
+        box-shadow: 0 0 40px 20px rgba(217, 4, 41, 0), inset 0 0 0 rgba(217, 4, 41, 0);
+      }
+    }
+
+    .genjutsu-ripple-active {
+      animation: genjutsuRipple 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Screen Genjutsu Vignette Pulse */
+    @keyframes screenGenjutsu {
+      0% { opacity: 0; }
+      25% { opacity: 0.65; }
+      100% { opacity: 0; }
+    }
+    .screen-genjutsu-pulse {
+      animation: screenGenjutsu 0.9s ease-out forwards;
+    }
+
+    /* Card Watermark Sharingan Hover Spin */
+    .mission-card .card-sharingan-watermark {
+      opacity: 0.05;
+      transform: rotate(0deg) scale(0.95);
+      transition: opacity 0.45s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mission-card:hover .card-sharingan-watermark {
+      opacity: 0.22;
+      transform: rotate(120deg) scale(1.08);
+    }
+
+    /* Audio Visualizer Bars */
+    @keyframes eqPulse1 { 0%, 100% { height: 25%; } 50% { height: 95%; } }
+    @keyframes eqPulse2 { 0%, 100% { height: 60%; } 50% { height: 20%; } }
+    @keyframes eqPulse3 { 0%, 100% { height: 35%; } 50% { height: 100%; } }
+    @keyframes eqPulse4 { 0%, 100% { height: 80%; } 50% { height: 30%; } }
+
+    .eq-playing .eq-bar-1 { animation: eqPulse1 0.75s ease-in-out infinite; }
+    .eq-playing .eq-bar-2 { animation: eqPulse2 0.55s ease-in-out infinite; }
+    .eq-playing .eq-bar-3 { animation: eqPulse3 0.85s ease-in-out infinite; }
+    .eq-playing .eq-bar-4 { animation: eqPulse4 0.65s ease-in-out infinite; }
+
+    /* Scroll Reveal Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Skill Bar Fill Animation */
+    .jutsu-bar-fill {
+      width: 0%;
+      transition: width 1.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Crimson Range Slider */
+    input[type="range"].crimson-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.14);
+      height: 4px;
+      border-radius: 9999px;
+      outline: none;
+    }
+    input[type="range"].crimson-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 9999px;
+      background: #ff1e42;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(255, 30, 66, 0.85);
+    }
+  </style>
+</head>
+
+<body class="bg-obsidian text-gray-100 antialiased selection:bg-crimson selection:text-white relative">
+
+  <!-- Full-Viewport Animated Canvas: Floating Akatsuki Red Clouds + Glowing Chakra Embers -->
+  <canvas id="chakraCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Genjutsu Screen Overlay Flash (Triggered on Sharingan Click) -->
+  <div id="genjutsuOverlay" class="fixed inset-0 pointer-events-none z-40 opacity-0"
+       style="background: radial-gradient(circle at center, rgba(255,30,66,0.18) 0%, rgba(141,0,25,0.45) 60%, rgba(7,7,11,0.92) 100%);">
+  </div>
+
+  <!-- Toast Notification Container (Replaces alert()) -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-xs sm:max-w-sm pointer-events-none"></div>
+
+  <!-- ======================================================================= -->
+  <!-- STICKY GLASSMORPHIC NAVIGATION BAR + BUILT-IN AMBIENT MUSIC CONTROLLER  -->
+  <!-- ======================================================================= -->
+  <header class="sticky top-0 z-30 backdrop-blur-md bg-obsidian/80 border-b border-crimson/25 shadow-[0_4px_30px_rgba(217,4,41,0.12)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20 gap-3">
+
+        <!-- Brand Emblem: Akatsuki Cloud SVG + Monogram -->
+        <a href="#home" class="flex items-center gap-3 group focus:outline-none">
+          <div class="w-11 h-8 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <!-- Akatsuki Red Cloud SVG -->
+            <svg viewBox="0 0 120 72" class="w-full h-full drop-shadow-[0_0_8px_rgba(217,4,41,0.75)]" aria-hidden="true">
+              <path d="M26 56 C10 56 4 44 10 34 C14 26 24 26 29 29 C30 16 44 8 58 12 C66 14 71 19 73 24 C81 18 96 19 103 28 C113 38 108 56 91 56 L26 56 Z"
+                    fill="#d90429" stroke="#f8fafc" stroke-width="3.2" stroke-linejoin="round" />
+              <path d="M35 45 C42 40 48 42 52 46 M66 36 C74 30 84 32 88 40"
+                    fill="none" stroke="#07070b" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <span class="font-cinzel font-bold text-sm sm:text-base tracking-widest text-white group-hover:text-crimson-bright transition-colors block">
+              MARKUS YUAN
+            </span>
+            <span class="font-rajdhani text-[10px] sm:text-xs tracking-[0.25em] text-crimson-bright uppercase block">
+              Akatsuki // Portfolio
+            </span>
+          </div>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <nav class="hidden lg:flex items-center gap-7 font-rajdhani font-semibold tracking-wider text-sm uppercase">
+          <a href="#home" class="text-gray-300 hover:text-crimson-bright transition-colors py-2">Home</a>
+          <a href="#dossier" class="text-gray-300 hover:text-crimson-bright transition-colors py-2">Shinobi Dossier</a>
+          <a href="#missions" class="text-gray-300 hover:text-crimson-bright transition-colors py-2">Lab Missions</a>
+          <a href="#jutsu" class="text-gray-300 hover:text-crimson-bright transition-colors py-2">Jutsu Stack</a>
+          <a href="#summon" class="text-gray-300 hover:text-crimson-bright transition-colors py-2">Summon</a>
+        </nav>
+
+        <!-- Compact Built-In Ambient Music Controller + Mobile Menu Button -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Ambient Music Controller Widget -->
+          <div id="musicWidget" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-charcoal/90 border border-crimson/35 shadow-inner">
+            <!-- Play / Pause Button -->
+            <button id="musicPlayBtn" type="button" aria-label="Toggle Ambient Shinobi Music"
+                    class="w-8 h-8 rounded-lg bg-crimson/20 hover:bg-crimson text-crimson-bright hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none">
+              <svg id="iconPlay" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg id="iconPause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+
+            <!-- Equalizer Visualizer Bars -->
+            <div id="eqVisualizer" class="hidden sm:flex items-end gap-[2px] h-4 w-5 px-0.5" title="Shamisen Ambient Synth">
+              <span class="eq-bar-1 w-1 bg-crimson-bright rounded-full h-1.5 transition-all"></span>
+              <span class="eq-bar-2 w-1 bg-crimson rounded-full h-2.5 transition-all"></span>
+              <span class="eq-bar-3 w-1 bg-crimson-bright rounded-full h-1.5 transition-all"></span>
+              <span class="eq-bar-4 w-1 bg-crimson rounded-full h-2 transition-all"></span>
+            </div>
+
+            <!-- Volume Slider (Hidden on ultra-small screens, shown sm+) -->
+            <input id="musicVolume" type="range" min="0" max="1" step="0.05" value="0.45"
+                   aria-label="Music Volume"
+                   class="crimson-slider hidden md:block w-16 lg:w-20" />
+
+            <!-- Mute Button -->
+            <button id="musicMuteBtn" type="button" aria-label="Mute or Unmute Music"
+                    class="w-7 h-7 rounded-lg text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+              <svg id="iconVolOn" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zm4.54 3.46a5 5 0 010 7.08m2.83-9.9a9 9 0 010 12.72"/>
+              </svg>
+              <svg id="iconVolOff" class="w-4 h-4 hidden text-crimson-bright" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zm12 4l-6 6m0-6l6 6"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button id="mobileMenuBtn" type="button" aria-label="Toggle Navigation Menu"
+                  class="lg:hidden p-2.5 rounded-xl bg-charcoal border border-crimson/30 text-gray-200 hover:text-crimson-bright transition-colors">
+            <svg id="menuOpenIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg id="menuCloseIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation Drawer -->
+    <div id="mobileMenu" class="hidden lg:hidden border-t border-crimson/20 bg-obsidian/95 backdrop-blur-xl">
+      <div class="px-4 py-4 space-y-2 font-rajdhani font-semibold uppercase tracking-wider text-sm">
+        <a href="#home" class="mobile-nav-link block px-4 py-3 rounded-xl hover:bg-crimson/15 hover:text-crimson-bright transition-colors">Home</a>
+        <a href="#dossier" class="mobile-nav-link block px-4 py-3 rounded-xl hover:bg-crimson/15 hover:text-crimson-bright transition-colors">Shinobi Dossier</a>
+        <a href="#missions" class="mobile-nav-link block px-4 py-3 rounded-xl hover:bg-crimson/15 hover:text-crimson-bright transition-colors">Lab Missions</a>
+        <a href="#jutsu" class="mobile-nav-link block px-4 py-3 rounded-xl hover:bg-crimson/15 hover:text-crimson-bright transition-colors">Jutsu Stack</a>
+        <a href="#summon" class="mobile-nav-link block px-4 py-3 rounded-xl hover:bg-crimson/15 hover:text-crimson-bright transition-colors">Summon</a>
+        <div class="pt-2 px-4 flex items-center justify-between text-xs text-gray-400 border-t border-white/10">
+          <span>Ambient Volume</span>
+          <input id="musicVolumeMobile" type="range" min="0" max="1" step="0.05" value="0.45" class="crimson-slider w-32" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- ======================================================================= -->
+    <!-- HERO SECTION: INTERACTIVE SHARINGAN / MANGEKYOU CENTERPIECE             -->
+    <!-- ======================================================================= -->
+    <section id="home" class="min-h-[90vh] flex items-center py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+        <!-- Hero Text Column -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6 reveal">
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-crimson/15 border border-crimson/40 text-crimson-bright font-rajdhani font-bold text-xs sm:text-sm tracking-[0.22em] uppercase">
+            <span class="w-2 h-2 rounded-full bg-crimson-bright animate-pulse"></span>
+            Akatsuki Shinobi Archive // S-Rank Portfolio
+          </div>
+
+          <h1 class="font-cinzel font-black text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-wide text-white">
+            Markus Yuan <br class="hidden sm:inline" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-red-200 to-crimson-bright drop-shadow-[0_0_24px_rgba(217,4,41,0.45)]">
+              D. Vindua
+            </span>
+          </h1>
+
+          <!-- Role Subtitle Placeholder -->
+          <p class="font-rajdhani font-semibold text-lg sm:text-2xl tracking-wider text-gray-300 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+            <span>Web Developer</span>
+            <span class="text-crimson-bright">//</span>
+            <span>CS Student</span>
+            <span class="text-crimson-bright">//</span>
+            <span class="text-white">Akatsuki Coder</span>
+          </p>
+
+          <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            Forging sleek web applications, solving algorithmic challenges, and documenting custom academic lab missions with the precision of the Sharingan. Welcome to my self-contained GitHub Pages shinobi scroll.
+          </p>
+
+          <!-- Glowing Hero CTA Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
+            <a href="#missions"
+               class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-crimson to-crimson-bright text-white font-rajdhani font-bold uppercase tracking-widest text-sm shadow-[0_0_25px_rgba(217,4,41,0.5)] hover:shadow-[0_0_38px_rgba(255,30,66,0.8)] hover:-translate-y-0.5 transition-all duration-300">
+              <span>View Lab Missions</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
+            <a href="#summon"
+               class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-charcoal/80 border border-crimson/45 hover:border-crimson-bright text-gray-100 hover:text-white font-rajdhani font-bold uppercase tracking-widest text-sm hover:bg-crimson/15 hover:-translate-y-0.5 transition-all duration-300">
+              <span>Summoning Jutsu</span>
+            </a>
+          </div>
+
+          <!-- Quick Stats Row -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 max-w-md mx-auto lg:mx-0 border-t border-white/10">
+            <div>
+              <p id="heroMissionCount" class="font-cinzel font-bold text-2xl sm:text-3xl text-crimson-bright">04</p>
+              <p class="font-rajdhani text-xs uppercase tracking-widest text-gray-400">Lab Missions</p>
+            </div>
+            <div>
+              <p class="font-cinzel font-bold text-2xl sm:text-3xl text-white">S-Rank</p>
+              <p class="font-rajdhani text-xs uppercase tracking-widest text-gray-400">Clearance</p>
+            </div>
+            <div>
+              <p class="font-cinzel font-bold text-2xl sm:text-3xl text-white">100%</p>
+              <p class="font-rajdhani text-xs uppercase tracking-widest text-gray-400">Chakra Focus</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Centerpiece: Interactive Sharingan SVG -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center reveal">
+          <div class="relative flex items-center justify-center">
+            <!-- Outer Ambient Chakra Halo -->
+            <div class="absolute w-72 h-72 sm:w-80 sm:h-80 rounded-full bg-crimson/20 blur-3xl animate-pulse pointer-events-none"></div>
+
+            <!-- Genjutsu Click Ripple Ring -->
+            <div id="genjutsuRipple" class="absolute w-64 h-64 sm:w-72 sm:h-72 rounded-full border-2 border-crimson-bright opacity-0 pointer-events-none"></div>
+
+            <!-- Clickable Interactive Sharingan Button -->
+            <button id="sharinganBtn" type="button" aria-label="Activate Mangekyou Sharingan"
+                    class="sharingan-container relative w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full cursor-pointer focus:outline-none select-none group">
+              <svg viewBox="0 0 240 240" class="w-full h-full sharingan-glow">
+                <defs>
+                  <radialGradient id="sharinganIris" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ff2e51" />
+                    <stop offset="58%" stop-color="#d90429" />
+                    <stop offset="88%" stop-color="#7a0014" />
+                    <stop offset="100%" stop-color="#1a0004" />
+                  </radialGradient>
+                  <radialGradient id="mangekyouIris" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ff1e42" />
+                    <stop offset="65%" stop-color="#b80020" />
+                    <stop offset="92%" stop-color="#52000e" />
+                    <stop offset="100%" stop-color="#090002" />
+                  </radialGradient>
+                </defs>
+
+                <!-- Outer Sclera / Dark Rim -->
+                <circle cx="120" cy="120" r="112" fill="#07070b" stroke="#2a0a10" stroke-width="4" />
+
+                <!-- Crimson Iris -->
+                <circle id="irisFill" cx="120" cy="120" r="102" fill="url(#sharinganIris)" stroke="#07070b" stroke-width="5" />
+
+                <!-- Subtle Light Glint (Static) -->
+                <ellipse cx="84" cy="78" rx="18" ry="11" transform="rotate(-32 84 78)" fill="rgba(255,255,255,0.18)" />
+
+                <!-- Rotating Wheel Group -->
+                <g class="sharingan-wheel">
+
+                  <!-- STATE 1: 3-TOMOE SHARINGAN -->
+                  <g id="tomoePattern" class="transition-opacity duration-500">
+                    <!-- Inner Tomoe Track Ring -->
+                    <circle cx="120" cy="120" r="56" fill="none" stroke="#0b0b10" stroke-width="3.2" opacity="0.88" />
+
+                    <!-- Center Black Pupil -->
+                    <circle cx="120" cy="120" r="20" fill="#07070b" />
+
+                    <!-- Tomoe 1 (Top - 0 deg) -->
+                    <g transform="translate(120, 64) rotate(12)">
+                      <circle cx="0" cy="0" r="11.5" fill="#07070b" />
+                      <path d="M -2,-11 C 12,-14 20,-3 15,8 C 12,1 6,-2 -2,-1 Z" fill="#07070b" />
+                    </g>
+
+                    <!-- Tomoe 2 (Bottom Right - 120 deg) -->
+                    <g transform="rotate(120 120 120) translate(120, 64) rotate(12)">
+                      <circle cx="0" cy="0" r="11.5" fill="#07070b" />
+                      <path d="M -2,-11 C 12,-14 20,-3 15,8 C 12,1 6,-2 -2,-1 Z" fill="#07070b" />
+                    </g>
+
+                    <!-- Tomoe 3 (Bottom Left - 240 deg) -->
+                    <g transform="rotate(240 120 120) translate(120, 64) rotate(12)">
+                      <circle cx="0" cy="0" r="11.5" fill="#07070b" />
+                      <path d="M -2,-11 C 12,-14 20,-3 15,8 C 12,1 6,-2 -2,-1 Z" fill="#07070b" />
+                    </g>
+                  </g>
+
+                  <!-- STATE 2: MANGEKYOU SHARINGAN (Itachi-Inspired 3-Blade Pinwheel) -->
+                  <g id="mangekyouPattern" class="opacity-0 transition-opacity duration-500">
+                    <!-- Inner Crimson-Black Ring -->
+                    <circle cx="120" cy="120" r="64" fill="none" stroke="#07070b" stroke-width="5" />
+
+                    <!-- Three Sweeping Mangekyou Blades -->
+                    <g>
+                      <path d="M120 120 C 102 88, 108 42, 134 26 C 148 54, 146 92, 128 120 Z" fill="#07070b" />
+                      <path d="M120 120 C 102 88, 108 42, 134 26 C 148 54, 146 92, 128 120 Z" fill="#07070b" transform="rotate(120 120 120)" />
+                      <path d="M120 120 C 102 88, 108 42, 134 26 C 148 54, 146 92, 128 120 Z" fill="#07070b" transform="rotate(240 120 120)" />
+                    </g>
+
+                    <!-- Center Dark Core with Crimson Focal Dot -->
+                    <circle cx="120" cy="120" r="26" fill="#07070b" />
+                    <circle cx="120" cy="120" r="9.5" fill="#ff1e42" />
+                  </g>
+
+                </g>
+
+                <!-- Outer Precision Rim Ring -->
+                <circle cx="120" cy="120" r="102" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Interactive Sharingan Status Indicator -->
+          <div class="mt-6 text-center space-y-1.5">
+            <span id="sharinganStatus" class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-charcoal border border-crimson/40 font-rajdhani font-bold text-xs tracking-[0.2em] uppercase text-crimson-bright">
+              3-Tomoe Sharingan Active
+            </span>
+            <p class="text-xs text-gray-400 font-rajdhani tracking-wider uppercase">
+              Hover to accelerate • Click to awaken Mangekyou
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SHINOBI DOSSIER (ABOUT & SHINOBI ID CARD)                               -->
+    <!-- ======================================================================= -->
+    <section id="dossier" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-crimson/15">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Section Header -->
+        <div class="mb-12 reveal">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="h-[2px] w-10 bg-crimson-bright"></span>
+            <span class="font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-crimson-bright">01 // Shinobi Dossier</span>
+          </div>
+          <h2 class="font-cinzel font-bold text-3xl sm:text-4xl text-white">About The Shinobi</h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+          <!-- Left Column: Shinobi ID Card -->
+          <div class="lg:col-span-5 reveal">
+            <div class="h-full rounded-2xl bg-charcoal/90 border border-crimson/35 p-6 sm:p-7 shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden group hover:border-crimson-bright transition-colors duration-300">
+              <!-- Top Crimson Bar -->
+              <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-crimson-bright to-transparent"></div>
+
+              <!-- Card Header -->
+              <div class="flex items-center justify-between pb-5 mb-5 border-b border-white/10">
+                <div>
+                  <p class="font-rajdhani text-xs uppercase tracking-[0.22em] text-crimson-bright font-bold">Bingo Book // ID #009</p>
+                  <h3 class="font-cinzel font-bold text-xl text-white mt-0.5">Shinobi Credentials</h3>
+                </div>
+                <!-- Rogue Headband Emblem SVG -->
+                <div class="w-12 h-12 rounded-xl bg-crimson/15 border border-crimson/40 flex items-center justify-center">
+                  <svg viewBox="0 0 64 40" class="w-9 h-6">
+                    <rect x="4" y="6" width="56" height="28" rx="4" fill="#1b1b26" stroke="#9ca3af" stroke-width="2" />
+                    <!-- Stylized Leaf Spiral + Rogue Slash -->
+                    <path d="M26 26 C20 26 19 16 27 14 C35 12 40 20 35 25 C31 28 27 25 29 21" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="20" x2="52" y2="20" stroke="#ff1e42" stroke-width="2.6" stroke-linecap="round" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Shinobi Metadata Fields (Easy to customize in HTML) -->
+              <dl class="space-y-4 font-rajdhani text-sm sm:text-base">
+                <div class="flex justify-between items-center py-2 border-b border-white/5">
+                  <dt class="text-gray-400 uppercase tracking-wider text-xs">Full Name</dt>
+                  <dd class="font-bold text-white text-right">Markus Yuan D. Vindua</dd>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-white/5">
+                  <dt class="text-gray-400 uppercase tracking-wider text-xs">Affiliation</dt>
+                  <dd class="font-bold text-crimson-bright text-right">Akatsuki // Independent Dev</dd>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-white/5">
+                  <dt class="text-gray-400 uppercase tracking-wider text-xs">Shinobi Rank</dt>
+                  <dd class="font-bold text-white text-right">S-Rank CS Student</dd>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-white/5">
+                  <dt class="text-gray-400 uppercase tracking-wider text-xs">Primary Element</dt>
+                  <dd class="font-bold text-gray-200 text-right">Fire Style: Full-Stack Web</dd>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                  <dt class="text-gray-400 uppercase tracking-wider text-xs">Mission Status</dt>
+                  <dd class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    Active &amp; Available
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Right Column: Editable Bio Scroll -->
+          <div class="lg:col-span-7 reveal">
+            <div class="h-full rounded-2xl bg-charcoal/90 border border-white/10 p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <h3 class="font-cinzel font-bold text-xl sm:text-2xl text-white">Personal Scroll</h3>
+                  <button id="editBioBtn" type="button"
+                          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-crimson/15 hover:bg-crimson text-crimson-bright hover:text-white border border-crimson/35 font-rajdhani font-bold text-xs uppercase tracking-wider transition-all">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    <span id="editBioBtnText">Edit Bio</span>
+                  </button>
+                </div>
+
+                <!-- Editable Bio Content (Persists to localStorage) -->
+                <div id="bioDisplay" class="space-y-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                  <!-- Default bio injected / editable via JS -->
+                </div>
+
+                <div id="bioEditorWrap" class="hidden space-y-3">
+                  <textarea id="bioTextarea" rows="5"
+                            class="w-full rounded-xl bg-obsidian border border-crimson/50 focus:border-crimson-bright p-4 text-sm text-gray-100 focus:outline-none leading-relaxed"></textarea>
+                  <div class="flex items-center justify-end gap-2">
+                    <button id="cancelBioBtn" type="button" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-rajdhani uppercase tracking-wider text-gray-300">Cancel</button>
+                    <button id="saveBioBtn" type="button" class="px-4 py-2 rounded-lg bg-crimson hover:bg-crimson-bright text-xs font-rajdhani font-bold uppercase tracking-wider text-white">Save Bio</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Philosophy Quote -->
+              <div class="mt-8 pt-6 border-t border-white/10 flex items-start gap-4">
+                <div class="w-10 h-10 shrink-0 rounded-xl bg-crimson/15 border border-crimson/35 flex items-center justify-center text-crimson-bright font-cinzel font-bold text-lg">
+                  暁
+                </div>
+                <div>
+                  <p class="italic text-gray-300 text-sm">
+                    "True mastery in code—just like mastering a visual jutsu—comes from curiosity, relentless iteration, and building projects that leave a lasting impression."
+                  </p>
+                  <p class="font-rajdhani text-xs uppercase tracking-widest text-crimson-bright mt-1.5 font-semibold">
+                    — Markus Yuan D. Vindua
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- LAB MISSIONS (EDITABLE CUSTOM LAB TASK CARDS + MODAL + EXPORT)          -->
+    <!-- ======================================================================= -->
+    <section id="missions" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-crimson/15 bg-gradient-to-b from-transparent via-crimson/[0.03] to-transparent">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Section Header + Action Controls -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 reveal">
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="h-[2px] w-10 bg-crimson-bright"></span>
+              <span class="font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-crimson-bright">02 // Custom Mission Board</span>
+            </div>
+            <h2 class="font-cinzel font-bold text-3xl sm:text-4xl text-white">Lab Missions</h2>
+            <p class="text-gray-400 text-sm sm:text-base mt-2 max-w-2xl">
+              Custom academic lab tasks and coding missions. Edit cards directly in your browser, save automatically to localStorage, or export the code snippet to paste straight into your GitHub Pages <code class="text-crimson-bright">index.html</code>.
+            </p>
+          </div>
+
+          <!-- Primary Toolbar Buttons -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button id="addTaskBtn" type="button"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-crimson to-crimson-bright text-white font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider shadow-[0_0_18px_rgba(217,4,41,0.45)] hover:shadow-[0_0_28px_rgba(255,30,66,0.75)] hover:-translate-y-0.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+              </svg>
+              Add Lab Task
+            </button>
+
+            <button id="exportTasksBtn" type="button"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-charcoal border border-crimson/40 hover:border-crimson-bright text-gray-100 hover:text-white font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-crimson/15 transition-all">
+              <svg class="w-4 h-4 text-crimson-bright" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              Export JSON / Code
+            </button>
+
+            <button id="resetTasksBtn" type="button"
+                    class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-charcoal border border-white/15 hover:border-crimson/60 text-gray-400 hover:text-crimson-bright font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Reset Defaults
+            </button>
+          </div>
+        </div>
+
+        <!-- Rank Filter Tabs -->
+        <div id="rankFilterTabs" class="flex flex-wrap items-center gap-2 mb-8 reveal">
+          <button data-rank="ALL" class="rank-tab active px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all">
+            All Missions
+          </button>
+          <button data-rank="S-Rank" class="rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all">
+            S-Rank
+          </button>
+          <button data-rank="A-Rank" class="rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all">
+            A-Rank
+          </button>
+          <button data-rank="B-Rank" class="rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all">
+            B-Rank
+          </button>
+          <button data-rank="C-Rank" class="rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all">
+            C-Rank
+          </button>
+        </div>
+
+        <!-- Dynamic Mission Cards Grid -->
+        <div id="labTasksGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Cards rendered dynamically by JavaScript -->
+        </div>
+
+        <!-- Empty State (Shown when filter yields 0 cards) -->
+        <div id="emptyTasksState" class="hidden text-center py-16 px-6 rounded-2xl bg-charcoal/70 border border-dashed border-crimson/35">
+          <p class="font-cinzel text-xl text-white mb-2">No Missions Found in This Rank</p>
+          <p class="text-sm text-gray-400 mb-5">Select another rank filter or register a new custom lab mission.</p>
+          <button type="button" onclick="openTaskModal()"
+                  class="px-5 py-2.5 rounded-xl bg-crimson hover:bg-crimson-bright text-white font-rajdhani font-bold text-xs uppercase tracking-widest transition-colors">
+            + Create New Lab Task
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- JUTSU STACK (ANIMATED SKILL BARS & TECH ARSENAL)                        -->
+    <!-- ======================================================================= -->
+    <section id="jutsu" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-crimson/15">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="mb-12 reveal">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="h-[2px] w-10 bg-crimson-bright"></span>
+            <span class="font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-crimson-bright">03 // Chakra &amp; Technique</span>
+          </div>
+          <h2 class="font-cinzel font-bold text-3xl sm:text-4xl text-white">Jutsu Stack</h2>
+          <p class="text-gray-400 text-sm sm:text-base mt-2 max-w-2xl">
+            Core programming languages, web technologies, and shinobi tools wielded across academic and personal missions.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          <!-- Animated Jutsu Skill Bars -->
+          <div class="lg:col-span-7 space-y-5 reveal" id="jutsuBarsContainer">
+
+            <!-- Skill 1 -->
+            <div class="p-5 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson/60 hover:shadow-[0_0_24px_rgba(217,4,41,0.2)] transition-all duration-300 group">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="font-rajdhani font-bold text-base sm:text-lg text-white group-hover:text-crimson-bright transition-colors">HTML5 / CSS3 / Tailwind CSS</h3>
+                  <p class="text-xs text-gray-400">Fire Style: Responsive Interface &amp; Layout Architecture</p>
+                </div>
+                <span class="font-cinzel font-bold text-crimson-bright text-lg">92%</span>
+              </div>
+              <div class="w-full h-2.5 bg-obsidian rounded-full overflow-hidden border border-white/5">
+                <div class="jutsu-bar-fill h-full rounded-full bg-gradient-to-r from-crimson-dark via-crimson to-crimson-bright shadow-[0_0_12px_rgba(255,30,66,0.8)]" data-width="92%"></div>
+              </div>
+            </div>
+
+            <!-- Skill 2 -->
+            <div class="p-5 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson/60 hover:shadow-[0_0_24px_rgba(217,4,41,0.2)] transition-all duration-300 group">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="font-rajdhani font-bold text-base sm:text-lg text-white group-hover:text-crimson-bright transition-colors">JavaScript (ES6+ &amp; DOM APIs)</h3>
+                  <p class="text-xs text-gray-400">Sharingan Genjutsu: Interactive UI, Canvas &amp; Client State</p>
+                </div>
+                <span class="font-cinzel font-bold text-crimson-bright text-lg">86%</span>
+              </div>
+              <div class="w-full h-2.5 bg-obsidian rounded-full overflow-hidden border border-white/5">
+                <div class="jutsu-bar-fill h-full rounded-full bg-gradient-to-r from-crimson-dark via-crimson to-crimson-bright shadow-[0_0_12px_rgba(255,30,66,0.8)]" data-width="86%"></div>
+              </div>
+            </div>
+
+            <!-- Skill 3 -->
+            <div class="p-5 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson/60 hover:shadow-[0_0_24px_rgba(217,4,41,0.2)] transition-all duration-300 group">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="font-rajdhani font-bold text-base sm:text-lg text-white group-hover:text-crimson-bright transition-colors">Python &amp; Java</h3>
+                  <p class="text-xs text-gray-400">Shadow Clone Logic: OOP, Data Structures &amp; Scripting</p>
+                </div>
+                <span class="font-cinzel font-bold text-crimson-bright text-lg">82%</span>
+              </div>
+              <div class="w-full h-2.5 bg-obsidian rounded-full overflow-hidden border border-white/5">
+                <div class="jutsu-bar-fill h-full rounded-full bg-gradient-to-r from-crimson-dark via-crimson to-crimson-bright shadow-[0_0_12px_rgba(255,30,66,0.8)]" data-width="82%"></div>
+              </div>
+            </div>
+
+            <!-- Skill 4 -->
+            <div class="p-5 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson/60 hover:shadow-[0_0_24px_rgba(217,4,41,0.2)] transition-all duration-300 group">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="font-rajdhani font-bold text-base sm:text-lg text-white group-hover:text-crimson-bright transition-colors">Git, GitHub &amp; GitHub Pages</h3>
+                  <p class="text-xs text-gray-400">Summoning Jutsu: Version Control &amp; Static Deployment</p>
+                </div>
+                <span class="font-cinzel font-bold text-crimson-bright text-lg">88%</span>
+              </div>
+              <div class="w-full h-2.5 bg-obsidian rounded-full overflow-hidden border border-white/5">
+                <div class="jutsu-bar-fill h-full rounded-full bg-gradient-to-r from-crimson-dark via-crimson to-crimson-bright shadow-[0_0_12px_rgba(255,30,66,0.8)]" data-width="88%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shinobi Tools / Tech Arsenal Panel -->
+          <div class="lg:col-span-5 reveal">
+            <div class="h-full rounded-2xl bg-charcoal/90 border border-crimson/30 p-6 sm:p-7 flex flex-col justify-between">
+              <div>
+                <h3 class="font-cinzel font-bold text-xl text-white mb-2">Ninja Tool Pouch</h3>
+                <p class="text-xs sm:text-sm text-gray-400 mb-6">
+                  Supporting libraries, editors, and environments deployed during laboratory tasks.
+                </p>
+
+                <div class="flex flex-wrap gap-2.5">
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">VS Code</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">SQL / MySQL</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">REST APIs</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">Responsive Design</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">Figma UI</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">Node.js</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">HTML5 Canvas</span>
+                  <span class="px-3.5 py-2 rounded-xl bg-obsidian border border-white/10 hover:border-crimson-bright hover:text-crimson-bright text-xs sm:text-sm font-rajdhani font-semibold tracking-wider transition-all cursor-default">Linux / CLI</span>
+                </div>
+              </div>
+
+              <!-- Deployment Readiness Callout -->
+              <div class="mt-8 p-4 rounded-xl bg-crimson/10 border border-crimson/35">
+                <p class="font-rajdhani font-bold text-xs uppercase tracking-[0.2em] text-crimson-bright mb-1">
+                  GitHub Pages Ready
+                </p>
+                <p class="text-xs text-gray-300 leading-relaxed">
+                  Zero build steps required. Upload this single <code class="text-white">index.html</code> to your repository and enable GitHub Pages to deploy instantly.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SUMMONING JUTSU (CONTACT & SOCIAL LINKS)                                -->
+    <!-- ======================================================================= -->
+    <section id="summon" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-crimson/15">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+          <div class="inline-flex items-center gap-3 mb-2">
+            <span class="h-[2px] w-8 bg-crimson-bright"></span>
+            <span class="font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-crimson-bright">04 // Kuchiyose no Jutsu</span>
+            <span class="h-[2px] w-8 bg-crimson-bright"></span>
+          </div>
+          <h2 class="font-cinzel font-bold text-3xl sm:text-4xl text-white">Summoning Jutsu</h2>
+          <p class="text-gray-400 text-sm sm:text-base mt-3">
+            Want to collaborate on a project, review a lab mission, or connect? Place your seal on any channel below.
+          </p>
+        </div>
+
+        <!-- Contact Cards Grid (Update href placeholders with your real links!) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal">
+
+          <!-- GitHub Card -->
+          <a href="https://github.com/your-github-username" target="_blank" rel="noopener noreferrer"
+             class="group p-6 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson-bright hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(217,4,41,0.22)] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-obsidian border border-crimson/35 flex items-center justify-center text-white group-hover:bg-crimson group-hover:border-crimson transition-colors mb-4">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+              </div>
+              <h3 class="font-cinzel font-bold text-lg text-white">GitHub</h3>
+              <p class="text-xs text-gray-400 mt-1 break-all">@your-github-username</p>
+            </div>
+            <span class="mt-5 inline-flex items-center gap-1.5 font-rajdhani font-bold text-xs uppercase tracking-widest text-crimson-bright">
+              Inspect Repos →
+            </span>
+          </a>
+
+          <!-- Email Card with Copy Email Action -->
+          <div class="group p-6 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson-bright hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(217,4,41,0.22)] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-obsidian border border-crimson/35 flex items-center justify-center text-white group-hover:bg-crimson group-hover:border-crimson transition-colors mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h3 class="font-cinzel font-bold text-lg text-white">Email Messenger</h3>
+              <p id="contactEmailText" class="text-xs text-gray-400 mt-1 break-all">markus.vindua@example.com</p>
+            </div>
+            <div class="mt-5 flex items-center gap-2">
+              <button id="copyEmailBtn" type="button"
+                      class="px-3 py-1.5 rounded-lg bg-crimson/20 hover:bg-crimson text-crimson-bright hover:text-white font-rajdhani font-bold text-xs uppercase tracking-wider transition-colors">
+                Copy Email
+              </button>
+              <a href="mailto:markus.vindua@example.com"
+                 class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white font-rajdhani font-bold text-xs uppercase tracking-wider transition-colors">
+                Mail →
+              </a>
+            </div>
+          </div>
+
+          <!-- LinkedIn Card -->
+          <a href="https://linkedin.com/in/your-linkedin-profile" target="_blank" rel="noopener noreferrer"
+             class="group p-6 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson-bright hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(217,4,41,0.22)] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-obsidian border border-crimson/35 flex items-center justify-center text-white group-hover:bg-crimson group-hover:border-crimson transition-colors mb-4">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+              </div>
+              <h3 class="font-cinzel font-bold text-lg text-white">LinkedIn</h3>
+              <p class="text-xs text-gray-400 mt-1 break-all">in/markus-yuan-vindua</p>
+            </div>
+            <span class="mt-5 inline-flex items-center gap-1.5 font-rajdhani font-bold text-xs uppercase tracking-widest text-crimson-bright">
+              Connect →
+            </span>
+          </a>
+
+          <!-- Portfolio Repo Card -->
+          <a href="https://github.com/your-github-username/your-portfolio-repo" target="_blank" rel="noopener noreferrer"
+             class="group p-6 rounded-2xl bg-charcoal/90 border border-white/10 hover:border-crimson-bright hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(217,4,41,0.22)] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-obsidian border border-crimson/35 flex items-center justify-center text-white group-hover:bg-crimson group-hover:border-crimson transition-colors mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h3 class="font-cinzel font-bold text-lg text-white">Portfolio Repo</h3>
+              <p class="text-xs text-gray-400 mt-1">GitHub Pages Source Scroll</p>
+            </div>
+            <span class="mt-5 inline-flex items-center gap-1.5 font-rajdhani font-bold text-xs uppercase tracking-widest text-crimson-bright">
+              View Source →
+            </span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- FOOTER                                                                  -->
+  <!-- ======================================================================= -->
+  <footer class="relative z-10 border-t border-crimson/20 bg-obsidian/95 py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <svg viewBox="0 0 120 72" class="w-9 h-6" aria-hidden="true">
+          <path d="M26 56 C10 56 4 44 10 34 C14 26 24 26 29 29 C30 16 44 8 58 12 C66 14 71 19 73 24 C81 18 96 19 103 28 C113 38 108 56 91 56 L26 56 Z"
+                fill="#d90429" stroke="#f8fafc" stroke-width="3.2" stroke-linejoin="round" />
+        </svg>
+        <p class="text-xs sm:text-sm text-gray-400 font-rajdhani tracking-wider">
+          &copy; <span id="footerYear">2026</span> <span class="text-white font-semibold">Markus Yuan D. Vindua</span>. Crafted under the Akatsuki Moon.
+        </p>
+      </div>
+
+      <a href="#home"
+         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-charcoal border border-crimson/35 hover:border-crimson-bright text-xs font-rajdhani font-bold uppercase tracking-widest text-gray-300 hover:text-white transition-all">
+        Back to Top ↑
+      </a>
+    </div>
+  </footer>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 1: ADD / EDIT LAB TASK MODAL                                      -->
+  <!-- ======================================================================= -->
+  <div id="taskModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-charcoal border border-crimson/50 shadow-[0_0_50px_rgba(217,4,41,0.3)] p-6 sm:p-7 relative">
+      <div class="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
+        <div>
+          <p class="font-rajdhani text-xs uppercase tracking-[0.2em] text-crimson-bright font-bold">Mission Scroll Editor</p>
+          <h3 id="taskModalTitle" class="font-cinzel font-bold text-xl sm:text-2xl text-white">Add New Lab Mission</h3>
+        </div>
+        <button type="button" onclick="closeTaskModal()" aria-label="Close Modal"
+                class="w-9 h-9 rounded-xl bg-white/5 hover:bg-crimson/20 text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <form id="taskForm" class="space-y-4">
+        <input type="hidden" id="taskIdInput" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="taskNumberInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Task Number *</label>
+            <input id="taskNumberInput" type="text" required placeholder="e.g. LAB 05"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+          </div>
+          <div>
+            <label for="taskRankInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Mission Rank *</label>
+            <select id="taskRankInput" required
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none">
+              <option value="S-Rank">S-Rank (Mastery / Capstone)</option>
+              <option value="A-Rank">A-Rank (Advanced Lab)</option>
+              <option value="B-Rank">B-Rank (Intermediate Lab)</option>
+              <option value="C-Rank">C-Rank (Foundational Lab)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="taskTitleInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Mission Title *</label>
+            <input id="taskTitleInput" type="text" required placeholder="e.g. Responsive Landing Page"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+          </div>
+          <div>
+            <label for="taskCourseDateInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Course / Date *</label>
+            <input id="taskCourseDateInput" type="text" required placeholder="e.g. Web Dev 101 • Nov 2026"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label for="taskDescInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Mission Briefing / Description *</label>
+          <textarea id="taskDescInput" rows="3" required placeholder="Describe the lab objectives, implementation details, and key outcomes..."
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label for="taskTechInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Tech Stack Tags (comma-separated)</label>
+          <input id="taskTechInput" type="text" placeholder="HTML5, CSS3, JavaScript, LocalStorage"
+                 class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="taskLiveUrlInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">Live Demo URL</label>
+            <input id="taskLiveUrlInput" type="url" placeholder="https://username.github.io/lab-demo"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+          </div>
+          <div>
+            <label for="taskRepoUrlInput" class="block font-rajdhani text-xs uppercase tracking-wider text-gray-300 mb-1.5">GitHub Repo URL</label>
+            <input id="taskRepoUrlInput" type="url" placeholder="https://github.com/username/lab-repo"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-white/15 focus:border-crimson-bright text-sm text-white focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+          <button type="button" onclick="closeTaskModal()"
+                  class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-widest transition-colors">
+            Cancel
+          </button>
+          <button type="submit"
+                  class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-crimson to-crimson-bright text-white font-rajdhani font-bold text-xs uppercase tracking-widest shadow-[0_0_18px_rgba(217,4,41,0.5)] hover:shadow-[0_0_26px_rgba(255,30,66,0.8)] transition-all">
+            Save Mission
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 2: EXPORT LAB TASKS JSON / JS CODE SNIPPET                        -->
+  <!-- ======================================================================= -->
+  <div id="exportModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-charcoal border border-crimson/50 shadow-[0_0_50px_rgba(217,4,41,0.3)] p-6 sm:p-7">
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+        <div>
+          <p class="font-rajdhani text-xs uppercase tracking-[0.2em] text-crimson-bright font-bold">GitHub Pages Sync</p>
+          <h3 class="font-cinzel font-bold text-xl sm:text-2xl text-white">Export Lab Missions</h3>
+        </div>
+        <button type="button" onclick="closeExportModal()" aria-label="Close Export Modal"
+                class="w-9 h-9 rounded-xl bg-white/5 hover:bg-crimson/20 text-gray-400 hover:text-white flex items-center justify-center">
+          ✕
+        </button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-gray-300 mb-4 leading-relaxed">
+        Copy the JavaScript snippet below and replace <code class="text-crimson-bright">const DEFAULT_LAB_TASKS = [...]</code> in your <code class="text-white">index.html</code> so every visitor on GitHub Pages sees your updated lab missions permanently.
+      </p>
+
+      <!-- Format Toggle Tabs -->
+      <div class="flex items-center gap-2 mb-3">
+        <button id="exportModeJsBtn" type="button" class="px-3.5 py-1.5 rounded-lg bg-crimson text-white font-rajdhani font-bold text-xs uppercase tracking-wider">
+          JS Code Snippet (index.html)
+        </button>
+        <button id="exportModeJsonBtn" type="button" class="px-3.5 py-1.5 rounded-lg bg-obsidian border border-white/15 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-wider">
+          Raw JSON
+        </button>
+      </div>
+
+      <pre id="exportCodeOutput" class="w-full h-64 overflow-auto rounded-xl bg-obsidian border border-white/10 p-4 text-xs text-red-100 font-mono leading-relaxed select-all"></pre>
+
+      <div class="flex flex-wrap items-center justify-end gap-3 mt-5">
+        <button type="button" onclick="closeExportModal()"
+                class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-widest">
+          Close
+        </button>
+        <button id="copyExportBtn" type="button"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-crimson hover:bg-crimson-bright text-white font-rajdhani font-bold text-xs uppercase tracking-widest shadow-[0_0_16px_rgba(217,4,41,0.45)] transition-all">
+          Copy Snippet
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 3: CUSTOM AKATSUKI CONFIRMATION MODAL (Replaces confirm())        -->
+  <!-- ======================================================================= -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl bg-charcoal border border-crimson/55 shadow-[0_0_40px_rgba(217,4,41,0.35)] p-6">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-crimson/20 border border-crimson/50 flex items-center justify-center text-crimson-bright font-bold">
+          !
+        </div>
+        <h3 id="confirmModalTitle" class="font-cinzel font-bold text-lg text-white">Confirm Action</h3>
+      </div>
+      <p id="confirmModalMessage" class="text-sm text-gray-300 mb-6 leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-3">
+        <button id="confirmCancelBtn" type="button"
+                class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-widest">
+          Cancel
+        </button>
+        <button id="confirmProceedBtn" type="button"
+                class="px-5 py-2 rounded-xl bg-crimson hover:bg-crimson-bright text-white font-rajdhani font-bold text-xs uppercase tracking-widest">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- JAVASCRIPT ENGINE: LAB TASKS, SHARINGAN, CANVAS, WEB AUDIO SYNTH        -->
+  <!-- ======================================================================= -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. CUSTOMIZABLE DEFAULT DATA (EDIT DIRECTLY FOR GITHUB PAGES)
+     * =========================================================================
+     * Markus: You can edit these Lab Missions right here in index.html, OR use
+     * the "+ Add / Edit" buttons on the live page and click "Export JSON / Code"
+     * to copy & paste the updated array directly back here!
+     */
+    const DEFAULT_LAB_TASKS = [
+      {
+        id: 'lab-01',
+        taskNumber: 'LAB 01',
+        rank: 'S-Rank',
+        title: 'Semantic Portfolio & CSS Grid Scroll',
+        courseDate: 'Web Systems & Tech • Sep 2026',
+        description: 'Placeholder: Designed a responsive multi-section semantic HTML5 layout utilizing CSS Grid, Flexbox, and custom variables for dark-mode accessibility.',
+        techStack: ['HTML5', 'CSS3', 'Flexbox', 'Responsive UI'],
+        liveUrl: 'https://your-username.github.io/lab-01-demo',
+        repoUrl: 'https://github.com/your-username/lab-01-repo'
+      },
+      {
+        id: 'lab-02',
+        taskNumber: 'LAB 02',
+        rank: 'A-Rank',
+        title: 'Interactive DOM & Event-Driven Calculator',
+        courseDate: 'Client-Side Scripting • Oct 2026',
+        description: 'Placeholder: Engineered a keyboard-accessible JavaScript utility with live expression parsing, history logs persisted in localStorage, and smooth micro-interactions.',
+        techStack: ['JavaScript ES6', 'DOM API', 'LocalStorage'],
+        liveUrl: 'https://your-username.github.io/lab-02-demo',
+        repoUrl: 'https://github.com/your-username/lab-02-repo'
+      },
+      {
+        id: 'lab-03',
+        taskNumber: 'LAB 03',
+        rank: 'A-Rank',
+        title: 'Asynchronous REST API Mission Tracker',
+        courseDate: 'Web Applications Lab • Oct 2026',
+        description: 'Placeholder: Built an async/await dashboard consuming external JSON APIs with real-time search filtering, loading skeletons, and robust error handling.',
+        techStack: ['Fetch API', 'Async/Await', 'Tailwind CSS', 'JSON'],
+        liveUrl: 'https://your-username.github.io/lab-03-demo',
+        repoUrl: 'https://github.com/your-username/lab-03-repo'
+      },
+      {
+        id: 'lab-04',
+        taskNumber: 'LAB 04',
+        rank: 'B-Rank',
+        title: 'Data Structures & Algorithm Visualizer',
+        courseDate: 'Algorithms & Complexity • Nov 2026',
+        description: 'Placeholder: Implemented interactive step-by-step visualizations for sorting and pathfinding algorithms with adjustable speed controls and complexity metrics.',
+        techStack: ['JavaScript', 'HTML5 Canvas', 'Algorithms'],
+        liveUrl: 'https://your-username.github.io/lab-04-demo',
+        repoUrl: 'https://github.com/your-username/lab-04-repo'
+      }
+    ];
+
+    /**
+     * Default Shinobi Bio (Editable in UI or directly right here)
+     */
+    const DEFAULT_BIO_TEXT =
+      "Hello! I'm Markus Yuan D. Vindua, a passionate Computer Science student and aspiring web developer dedicated to crafting atmospheric, fast, and user-centric digital experiences.\n\n" +
+      "Inspired by the precision and iconic aesthetics of the Akatsuki and the Sharingan, this portfolio serves as my living mission board for custom academic laboratory tasks, personal experiments, and GitHub Pages deployments. Replace this bio anytime using the Edit button above or directly inside index.html.";
+
+    /**
+     * OPTIONAL CUSTOM MP3 AUDIO FOR GITHUB PAGES:
+     * Leave empty ('') to use the built-in Web Audio API Japanese Shamisen/Ambient Synth.
+     * To use your own local MP3 file on GitHub Pages:
+     *   1. Place your MP3 in your repo (e.g., ./assets/akatsuki-ambient.mp3)
+     *   2. Set CUSTOM_AUDIO_URL = './assets/akatsuki-ambient.mp3';
+     */
+    const CUSTOM_AUDIO_URL = '';
+
+    // LocalStorage Keys
+    const STORAGE_KEY_TASKS = 'markus_akatsuki_lab_tasks_v1';
+    const STORAGE_KEY_BIO = 'markus_akatsuki_bio_v1';
+
+    // Global State
+    let labTasks = [];
+    let activeRankFilter = 'ALL';
+    let exportMode = 'js';
+    let confirmCallback = null;
+
+    /**
+     * =========================================================================
+     * 2. TOAST NOTIFICATION & CLIPBOARD HELPER (No alert()/confirm())
+     * =========================================================================
+     */
+    function showToast(message, type = 'crimson') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const borderColor = type === 'success' ? 'border-emerald-500/60' : 'border-crimson-bright/70';
+      const dotColor = type === 'success' ? 'bg-emerald-400' : 'bg-crimson-bright';
+
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl bg-charcoal/95 border ${borderColor} shadow-[0_8px_28px_rgba(0,0,0,0.75)] text-xs sm:text-sm text-gray-100 font-rajdhani font-semibold tracking-wide transform translate-y-4 opacity-0 transition-all duration-300`;
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full ${dotColor} shrink-0"></span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 320);
+      }, 3200);
+    }
+
+    /**
+     * Safe iframe-compatible clipboard copy using document.execCommand('copy')
+     */
+    function copyTextToClipboard(text, successMsg) {
+      try {
+        const tempArea = document.createElement('textarea');
+        tempArea.value = text;
+        tempArea.setAttribute('readonly', '');
+        tempArea.style.position = 'fixed';
+        tempArea.style.top = '-9999px';
+        tempArea.style.left = '-9999px';
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        tempArea.setSelectionRange(0, tempArea.value.length);
+        const copied = document.execCommand('copy');
+        document.body.removeChild(tempArea);
+        if (copied) {
+          showToast(successMsg || 'Copied to clipboard!', 'success');
+        } else {
+          showToast('Select and press Ctrl+C / Cmd+C to copy.', 'crimson');
+        }
+      } catch (err) {
+        showToast('Unable to auto-copy; please copy manually.', 'crimson');
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * =========================================================================
+     * 3. CUSTOM CONFIRMATION MODAL
+     * =========================================================================
+     */
+    function openConfirmModal(title, message, onProceed) {
+      document.getElementById('confirmModalTitle').textContent = title;
+      document.getElementById('confirmModalMessage').textContent = message;
+      confirmCallback = onProceed;
+      const modal = document.getElementById('confirmModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('confirmModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      confirmCallback = null;
+    }
+
+    document.getElementById('confirmCancelBtn').addEventListener('click', closeConfirmModal);
+    document.getElementById('confirmProceedBtn').addEventListener('click', () => {
+      if (typeof confirmCallback === 'function') confirmCallback();
+      closeConfirmModal();
+    });
+
+    /**
+     * =========================================================================
+     * 4. INTERACTIVE SHARINGAN <-> MANGEKYOU TRANSFORMATION
+     * =========================================================================
+     */
+    let isMangekyou = false;
+
+    function initSharinganInteraction() {
+      const btn = document.getElementById('sharinganBtn');
+      const tomoe = document.getElementById('tomoePattern');
+      const mangekyou = document.getElementById('mangekyouPattern');
+      const iris = document.getElementById('irisFill');
+      const ripple = document.getElementById('genjutsuRipple');
+      const overlay = document.getElementById('genjutsuOverlay');
+      const status = document.getElementById('sharinganStatus');
+
+      btn.addEventListener('click', () => {
+        isMangekyou = !isMangekyou;
+
+        // Swap SVG eye layers
+        if (isMangekyou) {
+          tomoe.classList.add('opacity-0');
+          mangekyou.classList.remove('opacity-0');
+          iris.setAttribute('fill', 'url(#mangekyouIris)');
+          status.textContent = 'Mangekyou Sharingan Awakened';
+          showToast('Mangekyou Sharingan Awakened — Genjutsu Active!', 'crimson');
+        } else {
+          mangekyou.classList.add('opacity-0');
+          tomoe.classList.remove('opacity-0');
+          iris.setAttribute('fill', 'url(#sharinganIris)');
+          status.textContent = '3-Tomoe Sharingan Active';
+          showToast('Returned to 3-Tomoe Sharingan', 'crimson');
+        }
+
+        // Trigger Genjutsu Ripple & Screen Vignette Pulse
+        ripple.classList.remove('genjutsu-ripple-active');
+        overlay.classList.remove('screen-genjutsu-pulse');
+        void ripple.offsetWidth; // Force reflow to restart animation
+        ripple.classList.add('genjutsu-ripple-active');
+        overlay.classList.add('screen-genjutsu-pulse');
+
+        // Subtle Sharingan activation chime via Web Audio API
+        playSharinganChime(isMangekyou);
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 5. BACKGROUND CANVAS: AKATSUKI RED CLOUDS + GLOWING CHAKRA EMBERS
+     * =========================================================================
+     */
+    function initChakraCanvas() {
+      const canvas = document.getElementById('chakraCanvas');
+      const ctx = canvas.getContext('2d');
+      let width = 0;
+      let height = 0;
+      let embers = [];
+      let clouds = [];
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        seedParticles();
+      }
+
+      function seedParticles() {
+        const emberCount = Math.min(55, Math.floor(width / 26));
+        embers = Array.from({ length: emberCount }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 2.2 + 0.8,
+          vy: -(Math.random() * 0.45 + 0.15),
+          vx: (Math.random() - 0.5) * 0.25,
+          alpha: Math.random() * 0.6 + 0.18,
+          pulse: Math.random() * Math.PI * 2
+        }));
+
+        const cloudCount = Math.max(4, Math.min(8, Math.floor(width / 220)));
+        clouds = Array.from({ length: cloudCount }, (_, idx) => ({
+          x: (width / cloudCount) * idx + Math.random() * 120,
+          y: Math.random() * height,
+          scale: Math.random() * 0.55 + 0.55,
+          speed: Math.random() * 0.22 + 0.08,
+          driftPhase: Math.random() * Math.PI * 2,
+          opacity: Math.random() * 0.075 + 0.045
+        }));
+      }
+
+      function drawAkatsukiCloud(x, y, scale, opacity) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.globalAlpha = opacity;
+
+        // Stylized Akatsuki Cloud Silhouette
+        ctx.beginPath();
+        ctx.moveTo(26, 56);
+        ctx.bezierCurveTo(10, 56, 4, 44, 10, 34);
+        ctx.bezierCurveTo(14, 26, 24, 26, 29, 29);
+        ctx.bezierCurveTo(30, 16, 44, 8, 58, 12);
+        ctx.bezierCurveTo(66, 14, 71, 19, 73, 24);
+        ctx.bezierCurveTo(81, 18, 96, 19, 103, 28);
+        ctx.bezierCurveTo(113, 38, 108, 56, 91, 56);
+        ctx.closePath();
+
+        ctx.fillStyle = '#d90429';
+        ctx.fill();
+        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      function animateCanvas() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw floating Akatsuki clouds
+        for (const c of clouds) {
+          c.x += c.speed;
+          c.driftPhase += 0.008;
+          const bobY = c.y + Math.sin(c.driftPhase) * 10;
+          if (c.x > width + 140) {
+            c.x = -140;
+            c.y = Math.random() * height;
+          }
+          drawAkatsukiCloud(c.x, bobY, c.scale, c.opacity);
+        }
+
+        // Draw rising glowing red chakra embers
+        for (const e of embers) {
+          e.y += e.vy;
+          e.x += e.vx + Math.sin(e.pulse) * 0.15;
+          e.pulse += 0.03;
+
+          if (e.y < -10) {
+            e.y = height + 10;
+            e.x = Math.random() * width;
+          }
+          if (e.x < -10) e.x = width + 10;
+          if (e.x > width + 10) e.x = -10;
+
+          const currentAlpha = Math.max(0.08, e.alpha + Math.sin(e.pulse) * 0.2);
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 30, 66, ${currentAlpha})`;
+          ctx.shadowColor = '#ff1e42';
+          ctx.shadowBlur = 10;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        requestAnimationFrame(animateCanvas);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      animateCanvas();
+    }
+
+    /**
+     * =========================================================================
+     * 6. AMBIENT MUSIC CONTROLLER (WEB AUDIO SHAMISEN SYNTH + MP3 SUPPORT)
+     * =========================================================================
+     */
+    const musicEngine = {
+      isPlaying: false,
+      isMuted: false,
+      volume: 0.45,
+      audioCtx: null,
+      masterGain: null,
+      droneOsc: null,
+      droneGain: null,
+      loopTimer: null,
+      customAudioEl: null,
+      stepIndex: 0,
+      // Japanese In-Sen Pentatonic Scale frequencies (D, Eb, G, A, C)
+      melodyPattern: [
+        293.66, 311.13, 392.00, null, 440.00, 392.00, 311.13, 293.66,
+        261.63, null, 293.66, 440.00, 523.25, 440.00, 392.00, null
+      ]
+    };
+
+    function ensureAudioContext() {
+      if (!musicEngine.audioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        musicEngine.audioCtx = new AudioCtx();
+        musicEngine.masterGain = musicEngine.audioCtx.createGain();
+        musicEngine.masterGain.gain.value = musicEngine.isMuted ? 0 : musicEngine.volume;
+        musicEngine.masterGain.connect(musicEngine.audioCtx.destination);
+      }
+      if (musicEngine.audioCtx.state === 'suspended') {
+        musicEngine.audioCtx.resume();
+      }
+      return musicEngine.audioCtx;
+    }
+
+    function playShamisenNote(freq) {
+      const ctx = musicEngine.audioCtx;
+      if (!ctx || !musicEngine.masterGain || !freq) return;
+      const now = ctx.currentTime;
+
+      // Plucked string oscillator (triangle + subtle sawtooth harmonics)
+      const osc = ctx.createOscillator();
+      const oscHarm = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const env = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+
+      oscHarm.type = 'sawtooth';
+      oscHarm.frequency.setValueAtTime(freq * 2, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2200, now);
+      filter.frequency.exponentialRampToValueAtTime(320, now + 1.1);
+
+      env.gain.setValueAtTime(0.001, now);
+      env.gain.linearRampToValueAtTime(0.22, now + 0.018);
+      env.gain.exponentialRampToValueAtTime(0.0008, now + 1.35);
+
+      const harmGain = ctx.createGain();
+      harmGain.gain.value = 0.06;
+
+      osc.connect(filter);
+      oscHarm.connect(harmGain);
+      harmGain.connect(filter);
+      filter.connect(env);
+      env.connect(musicEngine.masterGain);
+
+      osc.start(now);
+      oscHarm.start(now);
+      osc.stop(now + 1.45);
+      oscHarm.stop(now + 1.45);
+    }
+
+    function playSharinganChime(awakened) {
+      try {
+        const ctx = ensureAudioContext();
+        if (!ctx || musicEngine.isMuted) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(awakened ? 220 : 440, now);
+        osc.frequency.exponentialRampToValueAtTime(awakened ? 660 : 293.66, now + 0.28);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.48);
+      } catch (e) {
+        // Ignore if audio playback blocked prior to gesture
+      }
+    }
+
+    function startAmbientMusic() {
+      // Mode A: Custom Local MP3 File (if configured by Markus)
+      if (CUSTOM_AUDIO_URL && CUSTOM_AUDIO_URL.trim() !== '') {
+        if (!musicEngine.customAudioEl) {
+          musicEngine.customAudioEl = new Audio(CUSTOM_AUDIO_URL);
+          musicEngine.customAudioEl.loop = true;
+        }
+        musicEngine.customAudioEl.volume = musicEngine.isMuted ? 0 : musicEngine.volume;
+        musicEngine.customAudioEl.play().catch(() => {
+          showToast('Could not load custom MP3; check CUSTOM_AUDIO_URL path.', 'crimson');
+        });
+        musicEngine.isPlaying = true;
+        updateMusicUI();
+        return;
+      }
+
+      // Mode B: Out-of-the-box Web Audio Japanese Pentatonic Ambient Loop
+      const ctx = ensureAudioContext();
+      if (!ctx) {
+        showToast('Web Audio is not supported in this browser.', 'crimson');
+        return;
+      }
+
+      // Start deep atmospheric D2 drone pad
+      if (!musicEngine.droneOsc) {
+        const drone = ctx.createOscillator();
+        const droneFilter = ctx.createBiquadFilter();
+        const droneGain = ctx.createGain();
+        drone.type = 'sine';
+        drone.frequency.value = 73.42; // Deep D2
+        droneFilter.type = 'lowpass';
+        droneFilter.frequency.value = 180;
+        droneGain.gain.value = 0.14;
+        drone.connect(droneFilter);
+        droneFilter.connect(droneGain);
+        droneGain.connect(musicEngine.masterGain);
+        drone.start();
+        musicEngine.droneOsc = drone;
+        musicEngine.droneGain = droneGain;
+      }
+
+      musicEngine.isPlaying = true;
+      updateMusicUI();
+
+      // Play initial note immediately & schedule atmospheric sequence
+      playShamisenNote(musicEngine.melodyPattern[musicEngine.stepIndex]);
+      musicEngine.stepIndex = (musicEngine.stepIndex + 1) % musicEngine.melodyPattern.length;
+
+      musicEngine.loopTimer = setInterval(() => {
+        if (!musicEngine.isPlaying) return;
+        const note = musicEngine.melodyPattern[musicEngine.stepIndex];
+        if (note) playShamisenNote(note);
+        musicEngine.stepIndex = (musicEngine.stepIndex + 1) % musicEngine.melodyPattern.length;
+      }, 620);
+    }
+
+    function stopAmbientMusic() {
+      musicEngine.isPlaying = false;
+      if (musicEngine.customAudioEl) {
+        musicEngine.customAudioEl.pause();
+      }
+      if (musicEngine.loopTimer) {
+        clearInterval(musicEngine.loopTimer);
+        musicEngine.loopTimer = null;
+      }
+      if (musicEngine.droneOsc) {
+        try { musicEngine.droneOsc.stop(); } catch (e) {}
+        musicEngine.droneOsc.disconnect();
+        musicEngine.droneOsc = null;
+      }
+      updateMusicUI();
+    }
+
+    function setMusicVolume(val) {
+      musicEngine.volume = Math.max(0, Math.min(1, parseFloat(val)));
+      if (musicEngine.volume > 0 && musicEngine.isMuted) {
+        musicEngine.isMuted = false;
+      }
+      if (musicEngine.masterGain && musicEngine.audioCtx) {
+        musicEngine.masterGain.gain.setTargetAtTime(
+          musicEngine.isMuted ? 0 : musicEngine.volume,
+          musicEngine.audioCtx.currentTime,
+          0.05
+        );
+      }
+      if (musicEngine.customAudioEl) {
+        musicEngine.customAudioEl.volume = musicEngine.isMuted ? 0 : musicEngine.volume;
+      }
+      document.getElementById('musicVolume').value = musicEngine.volume;
+      document.getElementById('musicVolumeMobile').value = musicEngine.volume;
+      updateMusicUI();
+    }
+
+    function toggleMusicMute() {
+      musicEngine.isMuted = !musicEngine.isMuted;
+      if (musicEngine.masterGain && musicEngine.audioCtx) {
+        musicEngine.masterGain.gain.setTargetAtTime(
+          musicEngine.isMuted ? 0 : musicEngine.volume,
+          musicEngine.audioCtx.currentTime,
+          0.05
+        );
+      }
+      if (musicEngine.customAudioEl) {
+        musicEngine.customAudioEl.volume = musicEngine.isMuted ? 0 : musicEngine.volume;
+      }
+      updateMusicUI();
+    }
+
+    function updateMusicUI() {
+      const iconPlay = document.getElementById('iconPlay');
+      const iconPause = document.getElementById('iconPause');
+      const eq = document.getElementById('eqVisualizer');
+      const iconVolOn = document.getElementById('iconVolOn');
+      const iconVolOff = document.getElementById('iconVolOff');
+
+      if (musicEngine.isPlaying) {
+        iconPlay.classList.add('hidden');
+        iconPause.classList.remove('hidden');
+        eq.classList.add('eq-playing');
+      } else {
+        iconPlay.classList.remove('hidden');
+        iconPause.classList.add('hidden');
+        eq.classList.remove('eq-playing');
+      }
+
+      if (musicEngine.isMuted || musicEngine.volume === 0) {
+        iconVolOn.classList.add('hidden');
+        iconVolOff.classList.remove('hidden');
+      } else {
+        iconVolOn.classList.remove('hidden');
+        iconVolOff.classList.add('hidden');
+      }
+    }
+
+    function initMusicControls() {
+      document.getElementById('musicPlayBtn').addEventListener('click', () => {
+        if (musicEngine.isPlaying) {
+          stopAmbientMusic();
+        } else {
+          startAmbientMusic();
+          showToast('Shinobi Ambient Soundscape Activated', 'crimson');
+        }
+      });
+
+      document.getElementById('musicVolume').addEventListener('input', (e) => setMusicVolume(e.target.value));
+      document.getElementById('musicVolumeMobile').addEventListener('input', (e) => setMusicVolume(e.target.value));
+      document.getElementById('musicMuteBtn').addEventListener('click', toggleMusicMute);
+    }
+
+    /**
+     * =========================================================================
+     * 7. EDITABLE BIO (LOCALSTORAGE PERSISTED)
+     * =========================================================================
+     */
+    function initBioSection() {
+      const display = document.getElementById('bioDisplay');
+      const editorWrap = document.getElementById('bioEditorWrap');
+      const textarea = document.getElementById('bioTextarea');
+      const editBtn = document.getElementById('editBioBtn');
+      const saveBtn = document.getElementById('saveBioBtn');
+      const cancelBtn = document.getElementById('cancelBioBtn');
+
+      let currentBio = DEFAULT_BIO_TEXT;
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_BIO);
+        if (saved && saved.trim()) currentBio = saved;
+      } catch (e) {}
+
+      function renderBio() {
+        const paragraphs = currentBio.split(/\n+/).filter(Boolean);
+        display.innerHTML = paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('');
+      }
+
+      editBtn.addEventListener('click', () => {
+        textarea.value = currentBio;
+        display.classList.add('hidden');
+        editorWrap.classList.remove('hidden');
+        textarea.focus();
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        editorWrap.classList.add('hidden');
+        display.classList.remove('hidden');
+      });
+
+      saveBtn.addEventListener('click', () => {
+        const updated = textarea.value.trim();
+        if (!updated) {
+          showToast('Bio cannot be empty.', 'crimson');
+          return;
+        }
+        currentBio = updated;
+        try { localStorage.setItem(STORAGE_KEY_BIO, currentBio); } catch (e) {}
+        renderBio();
+        editorWrap.classList.add('hidden');
+        display.classList.remove('hidden');
+        showToast('Shinobi Bio Updated!', 'success');
+      });
+
+      renderBio();
+    }
+
+    /**
+     * =========================================================================
+     * 8. LAB MISSIONS CRUD, FILTERING, LOCALSTORAGE & CODE EXPORT
+     * =========================================================================
+     */
+    function loadLabTasks() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_TASKS);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            labTasks = parsed;
+            return;
+          }
+        }
+      } catch (e) {}
+      labTasks = JSON.parse(JSON.stringify(DEFAULT_LAB_TASKS));
+    }
+
+    function saveLabTasks() {
+      try {
+        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(labTasks));
+      } catch (e) {
+        showToast('Unable to save to localStorage in this browser mode.', 'crimson');
+      }
+    }
+
+    function getRankBadgeStyles(rank) {
+      switch (rank) {
+        case 'S-Rank':
+          return 'bg-crimson/20 text-crimson-bright border-crimson/60 shadow-[0_0_12px_rgba(255,30,66,0.3)]';
+        case 'A-Rank':
+          return 'bg-amber-500/15 text-amber-400 border-amber-500/45';
+        case 'B-Rank':
+          return 'bg-sky-500/15 text-sky-300 border-sky-500/45';
+        default:
+          return 'bg-gray-500/15 text-gray-300 border-gray-500/45';
+      }
+    }
+
+    function updateFilterTabStyles() {
+      document.querySelectorAll('.rank-tab').forEach(btn => {
+        const rank = btn.getAttribute('data-rank');
+        const count = rank === 'ALL'
+          ? labTasks.length
+          : labTasks.filter(t => t.rank === rank).length;
+
+        const label = rank === 'ALL' ? 'All Missions' : rank;
+        btn.innerHTML = `${label} <span class="ml-1.5 text-[11px] opacity-75">(${count})</span>`;
+
+        if (rank === activeRankFilter) {
+          btn.className = 'rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all bg-crimson text-white border-crimson-bright shadow-[0_0_15px_rgba(217,4,41,0.45)]';
+        } else {
+          btn.className = 'rank-tab px-4 py-2 rounded-xl font-rajdhani font-bold text-xs sm:text-sm uppercase tracking-wider border transition-all bg-charcoal/80 text-gray-300 border-white/15 hover:border-crimson/55 hover:text-white';
+        }
+      });
+
+      // Update Hero Counter
+      const countEl = document.getElementById('heroMissionCount');
+      if (countEl) {
+        countEl.textContent = String(labTasks.length).padStart(2, '0');
+      }
+    }
+
+    function renderLabTasks() {
+      const grid = document.getElementById('labTasksGrid');
+      const emptyState = document.getElementById('emptyTasksState');
+
+      updateFilterTabStyles();
+
+      const filtered = activeRankFilter === 'ALL'
+        ? labTasks
+        : labTasks.filter(t => t.rank === activeRankFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(task => {
+        const badgeStyle = getRankBadgeStyles(task.rank);
+        const techHtml = (task.techStack || []).map(tag =>
+          `<span class="px-2.5 py-1 rounded-lg bg-obsidian/90 border border-white/10 text-[11px] font-rajdhani font-semibold tracking-wider text-gray-300">${escapeHtml(tag)}</span>`
+        ).join('');
+
+        const safeLiveUrl = task.liveUrl ? escapeHtml(task.liveUrl) : '#missions';
+        const safeRepoUrl = task.repoUrl ? escapeHtml(task.repoUrl) : '#missions';
+
+        return `
+          <article class="mission-card relative overflow-hidden rounded-2xl bg-charcoal/95 border border-white/10 hover:border-crimson-bright/85 hover:-translate-y-2 hover:shadow-[0_14px_38px_rgba(217,4,41,0.24)] transition-all duration-300 p-6 flex flex-col justify-between group">
+
+            <!-- Subtle Rotating Sharingan Watermark on Hover -->
+            <svg viewBox="0 0 120 120" class="card-sharingan-watermark absolute -bottom-10 -right-10 w-44 h-44 pointer-events-none" aria-hidden="true">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#d90429" stroke-width="3" />
+              <circle cx="60" cy="60" r="30" fill="none" stroke="#d90429" stroke-width="2" />
+              <circle cx="60" cy="60" r="10" fill="#d90429" />
+              <circle cx="60" cy="30" r="6" fill="#d90429" />
+              <circle cx="86" cy="75" r="6" fill="#d90429" />
+              <circle cx="34" cy="75" r="6" fill="#d90429" />
+            </svg>
+
+            <div class="relative z-10">
+              <!-- Card Top Header: Task Number, Rank Badge, Edit/Delete Controls -->
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-lg bg-obsidian border border-crimson/40 font-rajdhani font-bold text-xs tracking-[0.18em] uppercase text-white">
+                    ${escapeHtml(task.taskNumber)}
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg border font-rajdhani font-bold text-xs tracking-wider uppercase ${badgeStyle}">
+                    ${escapeHtml(task.rank)}
+                  </span>
+                </div>
+
+                <!-- Per-Card Edit / Delete Buttons -->
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="openTaskModal('${escapeHtml(task.id)}')" title="Edit Lab Task"
+                          class="p-2 rounded-lg bg-obsidian/80 hover:bg-crimson text-gray-400 hover:text-white border border-white/10 hover:border-crimson transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </button>
+                  <button type="button" onclick="requestDeleteTask('${escapeHtml(task.id)}')" title="Delete Lab Task"
+                          class="p-2 rounded-lg bg-obsidian/80 hover:bg-crimson text-gray-400 hover:text-white border border-white/10 hover:border-crimson transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mission Title & Course/Date -->
+              <h3 class="font-cinzel font-bold text-lg sm:text-xl text-white group-hover:text-crimson-bright transition-colors mb-1">
+                ${escapeHtml(task.title)}
+              </h3>
+              <p class="font-rajdhani text-xs uppercase tracking-widest text-gray-400 mb-3">
+                ${escapeHtml(task.courseDate)}
+              </p>
+
+              <!-- Description -->
+              <p class="text-sm text-gray-300 leading-relaxed mb-5">
+                ${escapeHtml(task.description)}
+              </p>
+
+              <!-- Tech Stack Tags -->
+              <div class="flex flex-wrap gap-1.5 mb-6">
+                ${techHtml}
+              </div>
+            </div>
+
+            <!-- Card Footer Links -->
+            <div class="relative z-10 pt-4 border-t border-white/10 flex flex-wrap items-center gap-3">
+              <a href="${safeLiveUrl}" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-crimson/20 hover:bg-crimson text-crimson-bright hover:text-white border border-crimson/40 font-rajdhani font-bold text-xs uppercase tracking-wider transition-all">
+                <span>Live Demo</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+              <a href="${safeRepoUrl}" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-obsidian/90 hover:bg-white/10 text-gray-300 hover:text-white border border-white/15 font-rajdhani font-bold text-xs uppercase tracking-wider transition-all">
+                <span>GitHub Repo</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Open Add/Edit Modal
+    function openTaskModal(taskId = null) {
+      const modal = document.getElementById('taskModal');
+      const titleEl = document.getElementById('taskModalTitle');
+      const form = document.getElementById('taskForm');
+      form.reset();
+
+      if (taskId) {
+        const task = labTasks.find(t => t.id === taskId);
+        if (!task) return;
+        titleEl.textContent = `Edit ${task.taskNumber}`;
+        document.getElementById('taskIdInput').value = task.id;
+        document.getElementById('taskNumberInput').value = task.taskNumber;
+        document.getElementById('taskRankInput').value = task.rank;
+        document.getElementById('taskTitleInput').value = task.title;
+        document.getElementById('taskCourseDateInput').value = task.courseDate;
+        document.getElementById('taskDescInput').value = task.description;
+        document.getElementById('taskTechInput').value = (task.techStack || []).join(', ');
+        document.getElementById('taskLiveUrlInput').value = task.liveUrl || '';
+        document.getElementById('taskRepoUrlInput').value = task.repoUrl || '';
+      } else {
+        titleEl.textContent = 'Add New Lab Mission';
+        document.getElementById('taskIdInput').value = '';
+        const nextNum = String(labTasks.length + 1).padStart(2, '0');
+        document.getElementById('taskNumberInput').value = `LAB ${nextNum}`;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeTaskModal() {
+      const modal = document.getElementById('taskModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function requestDeleteTask(taskId) {
+      const task = labTasks.find(t => t.id === taskId);
+      if (!task) return;
+      openConfirmModal(
+        'Delete Lab Mission?',
+        `Remove "${task.taskNumber}: ${task.title}" from your mission board? You can always restore placeholders via Reset Defaults.`,
+        () => {
+          labTasks = labTasks.filter(t => t.id !== taskId);
+          saveLabTasks();
+          renderLabTasks();
+          showToast(`${task.taskNumber} removed from Mission Board.`, 'crimson');
+        }
+      );
+    }
+
+    // Export Modal Functions
+    function renderExportCode() {
+      const output = document.getElementById('exportCodeOutput');
+      const jsonStr = JSON.stringify(labTasks, null, 2);
+      if (exportMode === 'js') {
+        output.textContent = `const DEFAULT_LAB_TASKS = ${jsonStr};`;
+      } else {
+        output.textContent = jsonStr;
+      }
+
+      const jsBtn = document.getElementById('exportModeJsBtn');
+      const jsonBtn = document.getElementById('exportModeJsonBtn');
+      if (exportMode === 'js') {
+        jsBtn.className = 'px-3.5 py-1.5 rounded-lg bg-crimson text-white font-rajdhani font-bold text-xs uppercase tracking-wider';
+        jsonBtn.className = 'px-3.5 py-1.5 rounded-lg bg-obsidian border border-white/15 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-wider';
+      } else {
+        jsonBtn.className = 'px-3.5 py-1.5 rounded-lg bg-crimson text-white font-rajdhani font-bold text-xs uppercase tracking-wider';
+        jsBtn.className = 'px-3.5 py-1.5 rounded-lg bg-obsidian border border-white/15 text-gray-300 font-rajdhani font-bold text-xs uppercase tracking-wider';
+      }
+    }
+
+    function openExportModal() {
+      renderExportCode();
+      const modal = document.getElementById('exportModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeExportModal() {
+      const modal = document.getElementById('exportModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function initLabMissionControls() {
+      // Filter Tabs
+      document.querySelectorAll('.rank-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeRankFilter = btn.getAttribute('data-rank');
+          renderLabTasks();
+        });
+      });
+
+      // Add Task Button
+      document.getElementById('addTaskBtn').addEventListener('click', () => openTaskModal());
+
+      // Reset Defaults Button
+      document.getElementById('resetTasksBtn').addEventListener('click', () => {
+        openConfirmModal(
+          'Reset Lab Missions?',
+          'This will overwrite your custom edits in localStorage and restore the 4 default Lab Task placeholder cards.',
+          () => {
+            labTasks = JSON.parse(JSON.stringify(DEFAULT_LAB_TASKS));
+            activeRankFilter = 'ALL';
+            saveLabTasks();
+            renderLabTasks();
+            showToast('Mission Board restored to defaults.', 'success');
+          }
+        );
+      });
+
+      // Export Modal Controls
+      document.getElementById('exportTasksBtn').addEventListener('click', openExportModal);
+      document.getElementById('exportModeJsBtn').addEventListener('click', () => { exportMode = 'js'; renderExportCode(); });
+      document.getElementById('exportModeJsonBtn').addEventListener('click', () => { exportMode = 'json'; renderExportCode(); });
+      document.getElementById('copyExportBtn').addEventListener('click', () => {
+        const text = document.getElementById('exportCodeOutput').textContent;
+        copyTextToClipboard(text, 'Lab Missions snippet copied! Paste into index.html.');
+      });
+
+      // Form Submission (Add or Edit)
+      document.getElementById('taskForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const existingId = document.getElementById('taskIdInput').value;
+        const techRaw = document.getElementById('taskTechInput').value;
+        const techArray = techRaw
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean);
+
+        const taskPayload = {
+          id: existingId || `lab-${Date.now()}`,
+          taskNumber: document.getElementById('taskNumberInput').value.trim(),
+          rank: document.getElementById('taskRankInput').value,
+          title: document.getElementById('taskTitleInput').value.trim(),
+          courseDate: document.getElementById('taskCourseDateInput').value.trim(),
+          description: document.getElementById('taskDescInput').value.trim(),
+          techStack: techArray.length ? techArray : ['Custom Lab'],
+          liveUrl: document.getElementById('taskLiveUrlInput').value.trim(),
+          repoUrl: document.getElementById('taskRepoUrlInput').value.trim()
+        };
+
+        if (existingId) {
+          const idx = labTasks.findIndex(t => t.id === existingId);
+          if (idx !== -1) labTasks[idx] = taskPayload;
+          showToast(`${taskPayload.taskNumber} updated & saved!`, 'success');
+        } else {
+          labTasks.push(taskPayload);
+          showToast(`${taskPayload.taskNumber} added to Mission Board!`, 'success');
+        }
+
+        saveLabTasks();
+        renderLabTasks();
+        closeTaskModal();
+      });
+
+      // Close modals on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeTaskModal();
+          closeExportModal();
+          closeConfirmModal();
+        }
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 9. NAVIGATION, SCROLL REVEAL & JUTSU SKILL BAR ANIMATIONS
+     * =========================================================================
+     */
+    function initNavigationAndObservers() {
+      // Mobile Menu Toggle
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const menu = document.getElementById('mobileMenu');
+      const openIcon = document.getElementById('menuOpenIcon');
+      const closeIcon = document.getElementById('menuCloseIcon');
+
+      function toggleMobileMenu(forceClose = false) {
+        const isHidden = menu.classList.contains('hidden');
+        if (forceClose || !isHidden) {
+          menu.classList.add('hidden');
+          openIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        } else {
+          menu.classList.remove('hidden');
+          openIcon.classList.add('hidden');
+          closeIcon.classList.remove('hidden');
+        }
+      }
+
+      menuBtn.addEventListener('click', () => toggleMobileMenu(false));
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => toggleMobileMenu(true));
+      });
+
+      // Copy Email Button
+      document.getElementById('copyEmailBtn').addEventListener('click', () => {
+        const email = document.getElementById('contactEmailText').textContent.trim();
+        copyTextToClipboard(email, `Copied ${email} to clipboard!`);
+      });
+
+      // Footer Dynamic Year
+      document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      // IntersectionObserver for Scroll Reveal Elements
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+      // IntersectionObserver for Animated Jutsu Skill Bars
+      const barsContainer = document.getElementById('jutsuBarsContainer');
+      if (barsContainer) {
+        const barObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              barsContainer.querySelectorAll('.jutsu-bar-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width') || '80%';
+              });
+              barObserver.unobserve(barsContainer);
+            }
+          });
+        }, { threshold: 0.25 });
+        barObserver.observe(barsContainer);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 10. INITIALIZE PORTFOLIO ON WINDOW LOAD
+     * =========================================================================
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      initChakraCanvas();
+      initSharinganInteraction();
+      initMusicControls();
+      initBioSection();
+      loadLabTasks();
+      initLabMissionControls();
+      renderLabTasks();
+      initNavigationAndObservers();
+    });
+  </script>
+</body>
+</html>
